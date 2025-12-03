@@ -1,0 +1,43 @@
+﻿@page "/"
+
+
+@using BlazorApp4.Data
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+@* アプリケーションサービス *@
+@inject IDbContextFactory<TestDbContext> DbFactory
+
+
+<h3>Sample01 : 一覧表示</h3>
+
+@if (testitems == null)
+{
+    <div>データロード中...</div>
+}
+else
+{
+    <div>
+        <QuickGrid Items="@testitems">
+            <PropertyColumn Property="@(a => a.Id)" Title="id" />
+            <PropertyColumn Property="@(a => a.Name)" Title="name" />
+            <PropertyColumn Property="@(a => a.Description)" Title="著者(姓)" />
+            <PropertyColumn Property="@(a => a.CreatedAt)" Title="電話番号" />
+        </QuickGrid>
+    </div>
+}
+
+@code {
+    // データバインドに使用する変数
+    private IQueryable<TestItem>? testitems = null;
+
+    // ページ初期化時に呼び出されるイベントハンドラ
+    protected override async Task OnInitializedAsync()
+    {
+        await using (var pubs = await DbFactory.CreateDbContextAsync())
+        {
+            testitems = (await pubs.TestItems.ToListAsync()).AsQueryable();
+        }
+    }
+}
+
