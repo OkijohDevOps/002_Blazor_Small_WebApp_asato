@@ -1,0 +1,2 @@
+# 002_Blazor_Small_WebApp_asato
+一覧表示のみできる最低限動くスモールWebアプリです。
